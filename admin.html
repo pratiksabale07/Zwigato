@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- css -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        .verticle {
+            border-right: 1px solid;
+            height: 35rem;
+        }
+
+        tr:hover {
+            background-color: rgb(248, 233, 248);
+        }
+
+        body {
+            background-color: whitesmoke;
+        }
+
+        .inputs {
+            position: relative;
+            left: 447px;
+        }
+    </style>
+
+    <title>Admin</title>
+</head>
+
+<body>
+    <div><button class="btn btn-primary m-3" onclick="goToHome()" style="float: right;">Logout</button></div>
+
+    <div class="container-fluid text-center m-3">
+        <label for="Items">Choose Item:</label>
+        <select name="Items" id="items">
+            <option>Select a type</option>
+            <option value="veg">Veg</option>
+            <option value="veg">Non Veg</option>
+        </select>
+        <div class="inputs">
+            <div class="input-group input-group-sm mb-3 mt-3 w-25">
+                <label for="exampleFormControlInput1" class="form-label m-1">Url:</label>
+                <input type="text" class="form-control" style="width: -webkit-fill-available;">
+            </div>
+            <div class="input-group input-group-sm mb-3 w-25">
+                <label for="exampleFormControlInput1" class="form-label m-1">Title:</label>
+                <input type="text" class="form-control" style="width: -webkit-fill-available;">
+            </div>
+            <div class="input-group input-group-sm mb-3 w-25">
+                <label for="exampleFormControlInput1" class="form-label m-1">Price:</label>
+                <input type="number" class="form-control" style="width: -webkit-fill-available;">
+            </div>
+        </div>
+        <button class="btn btn-primary m-1" id="items-add">Add item</button>
+    </div>
+    <!--  -->
+    <div class="container-fluid text-center">
+        <div class="container-checkbox container">
+        </div>
+        <div>
+            <h3 class="text-center m-4">Food Items Present</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Veg Items</h3>
+                <table class="table" id="vegTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Checkbox</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vegTBody">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h3>Non Veg Items</h3>
+                <table class="table" id="nonVegTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Checkbox</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nonVegTBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary m-3" id="delete-items">Delete Item</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // getting fooditemsobj from local storage
+        let foodItemsList = getLocalStorage()
+        // displayng foodItems
+        displayItems(foodItemsList)
+        // event listener when add button is clicked
+        let addItemsBtn = document.getElementById('items-add');
+        addItemsBtn.addEventListener('click', addItem)
+
+        // event listener when delete button is clicked
+        let deleteItemsBtn = document.getElementById('delete-items');
+        deleteItemsBtn.addEventListener('click', deleteItem)
+
+        function addItem(event) {
+            // foodItemsList = getLocalStorage()
+            var e = document.getElementById("items");
+            var value = e.value;
+            var type = e.options[e.selectedIndex].text;
+            let url = document.getElementsByClassName('form-control')[0].value
+            let title = document.getElementsByClassName('form-control')[1].value
+            let price = document.getElementsByClassName('form-control')[2].value
+
+            let obj = { 'url': url, 'title': title, 'price': price }
+            // let foodItemsListObj = {veg: [obj], nonVeg: []}
+
+            if (url == '' || title == '' || price == '') {
+                alert("please fill all the fields")
+            }
+
+            else if (localStorage.getItem(title)) {
+                alert('Dish already exist')
+            }
+
+            else if (type == 'Veg' || type == 'Non Veg') {
+                setToLocalStorage(obj, type)
+            }
+
+            else {
+                alert('Please Select the food type')
+            }
+        }
+
+        function deleteItem(event) {
+            let checkbox = document.getElementsByClassName('checkbox')
+            let checkboxArr = []
+            for (let i = 0; i < checkbox.length; i++) {
+                if (checkbox[i].checked) {
+                    checkboxArr.push(checkbox[i].value)
+                }
+            }
+            let foodItemsObjFromls = JSON.parse(localStorage.foodItemsList)
+            // Removing Items
+            for (key in foodItemsObjFromls) {
+                for (item of foodItemsObjFromls[key]) {
+                    let found = checkboxArr.find(function (value) {
+                        if (value == item.title) {
+                            // finding the index of item to remove
+                            let index = foodItemsObjFromls[key].indexOf(item)
+                            foodItemsObjFromls[key].splice(index, 1)
+                        }
+                    });
+                }
+            }
+
+            localStorage.setItem('foodItemsList', JSON.stringify(foodItemsObjFromls))
+            displayItems(foodItemsObjFromls)
+        }
+
+        function getLocalStorage() {
+            let foodItemsObjFromls = JSON.parse(localStorage.foodItemsList)
+            return foodItemsObjFromls
+        }
+        function displayItems(foodItemsObjFromLs) {
+            document.getElementsByClassName('form-control')[0].value = ''
+            document.getElementsByClassName('form-control')[1].value = ''
+            document.getElementsByClassName('form-control')[2].value = ''
+            if (foodItemsObjFromLs.veg) {
+                document.querySelector('#vegTBody').innerHTML = ''
+                for (let i = 0; i < foodItemsObjFromLs.veg.length; i++) {
+                    // let foodItem = JSON.parse(localStorage.getItem(foodItemsList[i]))
+                    let checkBoxDiv = document.querySelector('.container-checkbox')
+                    let body = document.getElementById('vegTBody')
+                    let table = document.getElementById('vegTable')
+                    // Creating line break
+                    var linebreak = document.createElement("br");
+                    // creating checkbox element
+                    var checkbox = document.createElement('input');
+                    // Assigning the attributes
+                    // to created checkbox
+                    checkbox.type = "checkbox";
+                    checkbox.name = "name";
+                    checkbox.value = foodItemsObjFromLs.veg[i].title;
+                    checkbox.className = "checkbox";
+                    // creating label for checkbox
+                    var label = document.createElement('label');
+
+                    // assigning attributes for
+                    // the created label tag
+                    label.htmlFor = "id";
+                    let row = body.insertRow(-1);
+                    let cell1 = row.insertCell(0)
+                    let cell2 = row.insertCell(1)
+                    let cell3 = row.insertCell(2)
+
+                    cell1.appendChild(checkbox)
+                    cell2.innerHTML = foodItemsObjFromLs.veg[i].title
+                    cell3.innerHTML = foodItemsObjFromLs.veg[i].price
+
+                }
+            }
+
+            if (foodItemsObjFromLs.nonVeg) {
+                document.querySelector('#nonVegTBody').innerHTML = ''
+                for (let i = 0; i < foodItemsObjFromLs.nonVeg.length; i++) {
+                    // let foodItem = JSON.parse(localStorage.getItem(foodItemsList[i]))
+                    let checkBoxDiv = document.querySelector('.container-checkbox')
+                    let body = document.getElementById('nonVegTBody')
+                    let table = document.getElementById('nonVegTable')
+                    // Creating line break
+                    var linebreak = document.createElement("br");
+                    // creating checkbox element
+                    var checkbox = document.createElement('input');
+                    // Assigning the attributes
+                    // to created checkbox
+                    checkbox.type = "checkbox";
+                    checkbox.name = "name";
+                    checkbox.value = foodItemsObjFromLs.nonVeg[i].title;
+                    checkbox.className = "checkbox";
+                    // creating label for checkbox
+                    var label = document.createElement('label');
+
+                    // assigning attributes for
+                    // the created label tag
+                    label.htmlFor = "id";
+                    let row = body.insertRow(-1);
+                    let cell1 = row.insertCell(0)
+                    let cell2 = row.insertCell(1)
+                    let cell3 = row.insertCell(2)
+
+                    cell1.appendChild(checkbox)
+                    cell2.innerHTML = foodItemsObjFromLs.nonVeg[i].title
+                    cell3.innerHTML = foodItemsObjFromLs.nonVeg[i].price
+
+                }
+            }
+        }
+
+        function setToLocalStorage(obj, type) {
+            let foodItemsObjFromLocalStorage = JSON.parse(localStorage.foodItemsList)
+            let count = 0
+            // When button is add Item
+            if (document.getElementById('items-add').innerHTML == 'Add item') {
+                for (key in foodItemsObjFromLocalStorage) {
+                    // finding same food item
+                    let found = foodItemsObjFromLocalStorage[key].find(elm => elm.title == obj.title)
+                    if (found) {
+                        count++
+                        let confirmation = confirm('Do You want to Update')
+                        if (confirmation) {
+                            count++
+                            document.getElementById('items-add').innerHTML = 'Update'
+                        }
+                        if (count == 1) {
+                            document.getElementsByClassName('form-control')[0].value = ''
+                            document.getElementsByClassName('form-control')[1].value = ''
+                            document.getElementsByClassName('form-control')[2].value = ''
+                        }
+                    }
+                }
+                // if not getting same food new Item then adding into local Storage
+                if (count == 0) {
+                    if (type == 'Veg') {
+                        let length = foodItemsObjFromLocalStorage.veg.length
+                        foodItemsObjFromLocalStorage.veg[length] = obj
+                        localStorage.setItem('foodItemsList', JSON.stringify(foodItemsObjFromLocalStorage))
+                    }
+                    else if (type == 'Non Veg') {
+                        let length = foodItemsObjFromLocalStorage.nonVeg.length
+                        foodItemsObjFromLocalStorage.nonVeg[length] = obj
+                        localStorage.setItem('foodItemsList', JSON.stringify(foodItemsObjFromLocalStorage))
+                    }
+                    let foodItemsObjFromls = JSON.parse(localStorage.foodItemsList)
+                    displayItems(foodItemsObjFromls)
+                }
+            }
+            // When button is Update
+            else if (document.getElementById('items-add').innerHTML = 'Update') {
+                for (key in foodItemsObjFromLocalStorage) {
+                    let index = foodItemsObjFromLocalStorage[key].findIndex(elm => elm.title == obj.title)
+                    if (index != -1) {
+                        foodItemsObjFromLocalStorage[key].splice(index, 1)
+                    }
+                }
+                if (type == 'Veg') {
+                    let length = foodItemsObjFromLocalStorage.veg.length
+                    foodItemsObjFromLocalStorage.veg[length] = obj
+                    localStorage.setItem('foodItemsList', JSON.stringify(foodItemsObjFromLocalStorage))
+                }
+                else if (type == 'Non Veg') {
+                    let length = foodItemsObjFromLocalStorage.nonVeg.length
+                    foodItemsObjFromLocalStorage.nonVeg[length] = obj
+                    localStorage.setItem('foodItemsList', JSON.stringify(foodItemsObjFromLocalStorage))
+                }
+                let foodItemsObjFromls = JSON.parse(localStorage.foodItemsList)
+                document.getElementById('items-add').innerHTML = 'Add item'
+
+                displayItems(foodItemsObjFromls)
+            }
+
+        }
+
+        function goToHome() {
+            sessionStorage.clear()
+            window.location = 'home.html'
+        }
+    </script>
+</body>
+
+</html>

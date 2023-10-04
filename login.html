@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- css link -->
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+    <style>
+        body {
+            background-image: url('https://img.freepik.com/free-vector/white-abstract-background-design_23-2148825582.jpg?w=900&t=st=1686062956~exp=1686063556~hmac=59d39d346ec7e81583546f05e179dc184a3049c03b275efcaa4fdbab0720426a');
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="home.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="register.html">Register</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="alert">
+
+    </div>
+    <div class="login">
+        <h1 class="pb-4">Login</h1>
+        <input type="text" placeholder="Username" id="username" required="required" />
+        <input type="password" placeholder="Password" id="password1" required="required" /><i style="bottom: 140px;"
+            class="fa-regular fa-eye" id="togglePassword"></i>
+        <button type="submit" class="btn btn-primary" style="width: 100%;" onclick="validate()">Let me in.</button>
+    </div>
+    </div>
+    </div>
+</body>
+<!-- bootstrap js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script>
+    function alertMsg() {
+        if (sessionStorage.lastUser) {
+            document.getElementById('alert').innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+<strong>Congrats! </strong>Registered Successfully
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>`
+            sessionStorage.clear()
+        }
+    }
+    alertMsg()
+</script>
+
+<script src="script.js"></script>
+<script>
+    // toogle the eye icon
+    let toogleBtn = document.getElementById('togglePassword')
+    toogleBtn.addEventListener('click', (event) => {
+        let passType = password1.getAttribute('type') === 'text' ? 'password' : 'text'
+        password1.setAttribute('type', passType)
+        if (passType == 'text') {
+            event.target.className = "fa-regular fa-eye-slash"
+        }
+        else {
+            event.target.className = "fa-regular fa-eye"
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- bootstrap cdn -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+
+  <title>Home Page</title>
+</head>
+
+<body style="background-color: whitesmoke;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link active" href="home.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="register.html">Register</a>
+        </li>
+        <li class=" nav-item">
+          <a class="nav-link" href="adminLogin.html">Admin</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav">
+      <li class=" nav-item"><a href="comment.html">
+          <i class="fa-regular fa-comment mt-1" style="font-size: 28px; margin-right: 10px; color: white;"></i></a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="pt-5 pb-5 row">
+      <div class="col-md-7">
+        <h1 class="text-center">Want Spicy Food</h1>
+        <p class="pt-2  text-center fs-6">Welcome to our <b class="fs-5">Zwig@to!</b> We believe that good food should
+          be
+          accessible and convenient for everyone. With our user-friendly platform, you can explore a wide variety of
+          restaurants and cuisines, all in one place. Browse through our menu categories, from appetizers to desserts,
+          and discover mouth-watering dishes that cater to your cravings..Enjoy hassle-free ordering with just a few
+          clicks, and track your order in real-time for ultimate peace of mind.Whether you're looking for a quick bite
+          or a full-course meal, our system connects you with the best restaurants in town, offering delicious options
+          to satisfy your taste buds.</p>
+        <div class="text-center">
+          <button class="btn btn-primary" onclick="gotoReg()"> Order now</button>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <img src="https://forsythwoman.com/wp-content/uploads/2020/04/SpicyFood.jpeg"
+          class="foodImg rounded float-right" alt="">
+      </div>
+    </div>
+    <hr>
+    <div class="pt-5 row">
+      <div class="col-md-4">
+        <img class="dileveryImages rounded"
+          src="https://static.vecteezy.com/system/resources/previews/016/314/788/original/fast-delivery-free-png.png"
+          alt="">
+        <h4 class="text-center">Lightning-Fast Delivery</h4>
+      </div>
+      <div class="col-md-4">
+        <img src="https://d2kh7o38xye1vj.cloudfront.net/wp-content/uploads/2021/10/banner-tracking.png" alt=""
+          class="dileveryImages">
+        <h4 class="text-center">Live Order Tracking</h4>
+      </div>
+      <div class="col-md-4">
+        <img src="https://img.freepik.com/premium-vector/cash-delivery_569841-143.jpg" alt="" class="dileveryImages">
+        <h4 class="text-center">Cash on Dilevery</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid bg-dark p-4 text-light bg-dark">
+    <p class="text-center">&copy; 2023 Food Ordering System. All rights reserved.</p>
+  </div>
+</body>
+<script>
+  function gotoReg() {
+    window.location = 'register.html'
+  }
+</script>
+<script src="script.js"></script>
+
+</html>

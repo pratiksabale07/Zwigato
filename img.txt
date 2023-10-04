@@ -1,0 +1,13 @@
+let foodItemsListObj = {
+                    veg: [
+                        
+                    ],
+                    nonVeg: [
+
+                    ]
+                }
+
+localStorage.setItem('foodItemsList', JSON.stringify(foodItemsListObj))
+
+
+                    let index = foodItemsObjFromLocalStorage[key].findIndex(elm => elm.title == obj.title)

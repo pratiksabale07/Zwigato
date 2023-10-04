@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        #id :hover {
+            background-color: black;
+        }
+
+        body {
+            background-color: whitesmoke;
+        }
+    </style>
+    <title>Hello, world!</title>
+</head>
+
+<body>
+
+    <a href="home.html" class="btn btn-primary m-2" style="float: right;" type="button">Back</a>
+    <div class="container">
+        <h2 class="p-3 text-center">Comments</h2>
+        <div id="comments"></div>
+        <div class="container comment-box border-top border-bottom">
+        </div>
+        <h1 class="text-center mt-5">Add Your Comment</h1>
+        <div class="addComment border">
+            <div class="firstName m-4">
+                <label for="Name">Name</label><br>
+                <input type="text" class="w-100 mt-2" id="name">
+            </div>
+            <div class="lastName m-4">
+                <label for="surname">Surname</label><br>
+                <input type="text" class="w-100 mt-2" id="surname">
+            </div>
+            <div class="comment m-4">
+                <label for="Comment">Comment</label><br>
+                <textarea class="form-control mt-2" id="textArea" rows="3"></textarea>
+            </div>
+            <div class="text-center">
+                <i class="fa-regular fa-star star star1" id="1"></i>
+                <i class="fa-regular fa-star star star2" id="2"></i>
+                <i class="fa-regular fa-star star star3" id="3"></i>
+                <i class="fa-regular fa-star star star4" id="4"></i>
+                <i class="fa-regular fa-star star star5" id="5"></i>
+                <!-- <i class="fa-solid fa-star"></i> -->
+            </div>
+            <div class="text-center">
+                <button class="btn btn-outline-primary m-2 col-lg-4" id="submitBtn" type="button">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let usersComments = JSON.parse(localStorage.usersComments)
+        if (usersComments.name.length > 0) {
+            for (key in usersComments) {
+                for (comment of usersComments[key]) {
+                    let div = document.createElement('div')
+                    div.setAttribute('class', 'container comment-box border-top border-bottom p-3')
+                    document.getElementById('comments').appendChild(div)
+                    div.innerHTML = `<h5>${comment.name + ' ' + comment.surName}</h5>
+                    <p>${comment.date}</p>
+                    <p>${comment.textArea}</p>`
+                }
+            }
+
+            let stars = document.getElementsByClassName('star')
+            for (star of stars) {
+                star.addEventListener("mouseover", hoverStar);
+                star.addEventListener("mouseout", removeHoverStar);
+            }
+            function hoverStar(event) {
+                let selected = parseInt(event.target.id)
+                let clss = event.target.className
+                for (let i = 0; i < selected; i++) {
+                    event.target.className = "fa-solid fa-star"
+                }
+            }
+
+            function removeHoverStar() {
+                let selected = parseInt(event.target.id)
+                for (let i = 0; i < selected; i++) {
+                    event.target.className = "fa-regular fa-star"
+                }
+            }
+        }
+        else {
+            alert('NO comments Availabel')
+        }
+
+        let submitBtn = document.getElementById('submitBtn')
+        submitBtn.addEventListener('click', submitComment)
+        function submitComment() {
+            let name = document.getElementById('name').value
+            let surName = document.getElementById('surname').value
+            let textArea = document.getElementById('textArea').value
+            var today = new Date();
+            var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date + ' at ' + time;
+            let commentObj = { 'name': name, 'surName': surName, 'textArea': textArea, 'date': dateTime }
+            let length = usersComments.name.length
+            usersComments.name[length] = commentObj
+            localStorage.setItem('usersComments', JSON.stringify(usersComments))
+            location.reload()
+        }
+    </script>
+</body>
+
+</html>

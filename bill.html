@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Invoice Bill</title>
+</head>
+
+<body>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congrats!</strong> Your Order has been registered successfully , Food will delivered soon
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <h3 class="text-center mt-5">Invoice</h3>
+    <div class="container pt-3">
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th scope="col">Sr No</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody id="tBody"></tbody>
+        </table>
+        <button class="btn btn-primary m-4" onclick="goToHome()"
+            style=" position: relative;display: flex; justify-content: center; float: right;">Logout</button>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script>
+    let foodItemsList = JSON.parse(localStorage.foodItemsList)
+    let userBillName = localStorage.lastUser + 'bill'
+    let userBillItems = localStorage[userBillName].split(',')
+    let tBody = document.getElementById('tBody')
+    let count = 1
+    let totalAmont = 0
+    for (item of userBillItems) {
+        let splitedItem = item.split('_')
+        for (key in foodItemsList) {
+            creteTable(key, foodItemsList, splitedItem)
+        }
+    }
+
+    function creteTable(key, foodItemsList, splitedItem) {
+        let found = foodItemsList[key].find(elm => elm.title == splitedItem[0])
+        if (found) {
+            let row = tBody.insertRow(-1)
+            let srNo = row.insertCell(0)
+            let title = row.insertCell(1)
+            let quantity = row.insertCell(2)
+            let type = row.insertCell(3)
+            let price = row.insertCell(4)
+            srNo.innerHTML = count;
+            title.innerHTML = found.title;
+            quantity.innerHTML = splitedItem[1];
+            type.innerHTML = key;
+            price.innerHTML = found.price * parseInt(splitedItem[1]);
+            count++
+            totalAmont += parseInt(found.price * parseInt(splitedItem[1]))
+        }
+    }
+    let row = tBody.insertRow(-1)
+    row.setAttribute('class', 'table-info')
+    let cell1 = row.insertCell(0)
+    let cell2 = row.insertCell(1)
+    let cell3 = row.insertCell(2)
+    let cell4 = row.insertCell(3)
+    let cell5 = row.insertCell(4)
+    cell1.innerHTML = '';
+    cell2.innerHTML = '';
+    cell3.innerHTML = '';
+    cell4.innerHTML = 'Total Amount';
+    cell5.innerHTML = totalAmont + '<button class="btn btn-primary" onclick="pay()" style="float: right;">Pay</button>'
+
+    function pay() {
+        row.setAttribute('class', "table-success")
+        cell5.innerHTML = totalAmont + '<button class="btn btn-success" onclick="pay()" style="float: right;">Paid</button>'
+    }
+
+
+    function goToHome() {
+        sessionStorage.clear()
+        window.location = 'home.html'
+        // removing lastuser cartItems and Bill
+        let lastUser = localStorage.lastUser
+        let lastUserCart = lastUser + 'Cart'
+        let lastUserBill = lastUser + 'bill'
+        localStorage.removeItem(lastUserCart)
+        localStorage.removeItem(lastUserBill)
+    }
+</script>
+
+</html>

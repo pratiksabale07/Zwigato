@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        .checkbox {
+            position: relative;
+            float: right;
+            top: -207px;
+            font-size: x-large;
+        }
+
+        body {
+            background-color: whitesmoke;
+        }
+    </style>
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center m-4">Cart</h1>
+        <div class="row" id="row">
+        </div>
+        <div id="buyBtn" class="text-center m-3"><a class="btn btn-outline-primary col-6 mx-auto" id="buy">Order Now</a>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // getting lastuser cart name
+        let lastUser = localStorage.lastUser + 'Cart'
+        // if lastuser cart exist
+        if (localStorage[lastUser]) {
+            let cartItems = localStorage[lastUser].split(',')
+            for (let item of cartItems) {
+                let itemObj = JSON.parse(localStorage.foodItemsList)
+                let titleForId = item.split(' ').join('')
+                let itemfromObj;
+                for (key in itemObj) {
+                    itemfromObj = itemObj[key].find(elm => elm.title === item)
+                    if (itemfromObj) {
+                        displayItems(itemfromObj, item, titleForId)
+                    }
+                }
+            }
+        }
+        else (
+            alert("No Items in Cart Please add")
+        )
+        let deleteBtns = document.getElementsByClassName('delete')
+        for (btn of deleteBtns) {
+            btn.addEventListener('click', deleteBtn)
+        }
+
+        function deleteBtn(event) {
+            let userCartName = localStorage.lastUser + 'Cart'
+            let userCartNameArr = localStorage[userCartName].split(',')
+            localStorage.removeItem(userCartName)
+            let title = event.target.id
+            // finding same namefor title eg. pannerTikka == Panner Tikka(because Panner Tikka is not setting for id)
+            let tempFoodItem = userCartNameArr.find(elm => elm.split(' ').join('') == title)
+            // removing tempfooditem from array and then pushing into localstorage
+            userCartNameArr.splice(userCartNameArr.indexOf(tempFoodItem), 1);
+            localStorage.setItem(userCartName, userCartNameArr)
+            event.target.parentElement.parentElement.parentElement.remove()
+            // document.getElementById('row').innerHTML = "";
+
+            // for (item of userCartNameArr) {
+            //     let itemArr = JSON.parse(localStorage.getItem(item))
+            //     displayItems(itemArr)
+            //     location.reload()
+            // }
+        }
+
+        let buyBtn = document.getElementById('buy')
+        buyBtn.addEventListener('click', buy)
+        function buy() {
+            let userCartName = localStorage.lastUser + 'Cart'
+            let userCartNameArr = localStorage[userCartName].split(',')
+            let checkboxes = document.getElementsByClassName('checkbox')
+            let checkboxArr = []
+            for (checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    // finding same namefor title eg. pannerTikka == Panner Tikka(because Panner Tikka is not setting for id)
+                    let tempFoodItem = userCartNameArr.find(elm => elm.split(' ').join('') == checkbox.value)
+                    let count = checkbox.parentElement.nextElementSibling.children[3].innerHTML
+                    checkboxArr.push(tempFoodItem + "_" + count)
+                }
+            }
+
+            // getting quantity of food Item
+            // let nums = document.getElementsByClassName('num')
+            // putting initailcount to 1
+            // for (num of nums) {
+            //     initialCount.innerHTML = num
+            // }
+            let userBillName = localStorage.lastUser + 'bill'
+            localStorage.setItem(userBillName, checkboxArr)
+
+            if (checkboxArr.length > 0) {
+                window.location.href = 'bill.html'
+            }
+            else {
+                alert('Please Select items to Buy')
+            }
+        }
+
+        function displayItems(itemfromObj, item, titleForId) {
+            if (item != '') {
+                let div = document.createElement('div')
+                div.setAttribute('class', 'col-lg-4')
+                document.getElementById('row').appendChild(div)
+                div.innerHTML = `<div class="card mb-5 text-center" style="width: 18rem; display: flex; margin-left: 33px">
+                    <img style="height:200px;" src=${itemfromObj.url}
+                        class="card-img-top" alt="">
+                        <div class="">
+                    <input class="checkbox form-check-input" type="checkbox" value=${titleForId} id="flexCheckDefault" value=${itemfromObj.title}>
+                    </div>
+                    <div class="card-body" style="position: relative; bottom: 35px;">
+                        <h5 class="card-title">${itemfromObj.title}</h5>
+                        <p id=${itemfromObj.price}>${itemfromObj.price} Rs only</p>
+                        <button type="button" class="btn btn-primary decrementCount" id=${titleForId}>-</button>  
+                        <a class="num .text-secondary" style="text-decoration: none; margin: 25px; font-size: 20px"></a>
+                        <button type="button" class="btn btn-primary incrementCount" id=${titleForId}>+</button>      
+                        <br>
+                        <br>
+                        <a class="delete btn btn-danger"  id=${titleForId}>Delete from cart</a>
+                    </div>
+                </div>
+                `
+            }
+            else {
+                alert('no dishes available')
+            }
+        }
+        let initialCounts = document.getElementsByClassName('num')
+        // putting initailcount to 1
+        for (initialCount of initialCounts) {
+            let num = 1
+            initialCount.innerHTML = num
+        }
+
+        let incrementCounts = document.getElementsByClassName('incrementCount')
+        for (incrementCount of incrementCounts) {
+            incrementCount.addEventListener('click', addCount)
+        }
+        function addCount(event) {
+            let num = parseInt(event.target.previousElementSibling.innerHTML)
+            num++
+            event.target.previousElementSibling.innerHTML = num
+            let price = parseInt(event.target.previousElementSibling.previousElementSibling.previousElementSibling.id)
+            event.target.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML = num * price + " Rs only"
+        }
+
+        let decrementCounts = document.getElementsByClassName('decrementCount')
+        for (decrementCount of decrementCounts) {
+            decrementCount.addEventListener('click', deleteCount)
+        }
+        function deleteCount(event) {
+            let num = parseInt(event.target.nextElementSibling.innerHTML)
+            if (num > 1) {
+                num--
+                event.target.nextElementSibling.innerHTML = num
+                let price = event.target.previousElementSibling.id
+                event.target.previousElementSibling.innerHTML = num * price + " Rs only"
+            }
+        }
+    </script>
+</body>
+
+</html>
